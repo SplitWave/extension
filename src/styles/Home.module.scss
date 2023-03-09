@@ -1,0 +1,294 @@
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$purple: #700CC2;
+$pink: #D664FF;
+$blue: #5339CC;
+
+@mixin purpleButton {
+    background: linear-gradient(90deg, #700CC2 0%, #9036D9 100%);
+    border: none;
+    width: 336px;
+    height: 50px;
+    border-radius: 6px;
+    left: 10px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+@mixin whiteButton {
+    background-color: white;
+    color: $purple;
+    border: none;
+    width: 336px;
+    height: 50px;
+    border-radius: 6px;
+    left: 10px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+@mixin layout {
+    background-color: white;
+    color: black;
+    width: 358px;
+    height: 590px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    border-radius: 8px;
+    padding-top: 20px;
+}
+
+
+.navbar {
+    display: flex;
+    height: 56px;
+
+    p {
+        text-align: left;
+        font-size: 70%;
+        margin-right: 90px;
+        margin-left: 10px;
+    }
+
+    p:first-child {
+        font-weight: 900;
+        margin-top: 2px;
+        margin-bottom: -9px;
+    }
+
+    span:nth-child(1) {
+        margin-right: 10px;
+    }
+    span:nth-child(2) {
+        margin-right: 10px;
+    }
+}
+
+
+.homepage {
+    @include layout;
+
+    img {
+        height: 48px;
+        width: 52.5px;
+        position: relative;
+        left: 135px;
+    }
+
+    input {
+        background-color: white;
+        color: #D1D5DB;
+        padding: 9px 13px;
+        height: 42px;
+        border: 1px solid #D1D5DB;
+        box-shadow: none;
+        border-radius: 6px;
+        border-color: #D1D5DB;
+    }
+
+    input[type=checkbox] {
+        accent-color: red;
+    }
+
+    .rememberMe {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .checkbox {
+            display: inline;
+        }
+
+        p {
+            font-size: 80%;
+            color: $purple;
+            display: flex;
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+    }
+
+    button {
+        border: none;
+        border-radius: .2rem;
+        height: 38px;
+        font-size: 100%;
+        letter-spacing: 0.4px;
+    }
+
+    .login {
+        background-color: $purple;
+    }
+
+    .gum {
+        background-color: $pink;
+        margin-top: 16px;
+    }
+
+    .phantom {
+        background-color: $blue;
+        margin-top: 16px;
+
+        .icon {
+            background: url(../../public/phantom.jpg);
+            width: 30px;
+        }
+
+    }
+
+}
+
+
+.page2 {
+    @include layout;
+
+    img {
+        border-radius: 4px;
+    }
+
+    .icons {
+        display: flex;
+        justify-content: space-between;
+        width: 100px;
+    }
+
+    hr {
+        height: 30px;
+        border-style: solid;
+        border-color: #8c8b8b;
+        border-width: 1px 0 0 0;
+        border-radius: 20px;
+    }
+
+    .pendingTx {
+        height: 140px;
+        margin-top: 10px;
+        background-color: black;
+        color: white;
+        text-align: left;
+        padding-left: 16px;
+        font-size: 12px;
+    }
+
+    .initiate {
+        @include purpleButton;
+        top: 510px;
+        position: absolute;
+    }
+}
+
+.page3 {
+    @include layout;
+    padding-top: 30px;
+
+    h2 {
+        color: rgba(17, 24, 39, 0.8);
+        width: 311px;
+        height: 72px;
+        line-height: 36px;
+    }
+
+    span {
+        color:#700CC2
+    }
+
+    .amount {
+        background-color: transparent;
+        border: none;
+        font-weight: 700;
+        font-size: 48px;
+        line-height: 20px;
+        color: rgba(0, 0, 0, 0.2);
+        text-align: center;
+        padding-top: 10px;
+    }
+
+    .tag {
+        background: rgba(212, 211, 211, 0.2);
+        padding: 9px 13px;
+        width: 311px;
+        height: 42px;
+        position: relative;
+        border-radius: 6px;
+        top: 30px;
+        border: none;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .split {
+        @include purpleButton;
+        top: 450px;
+        position: absolute;
+    }
+
+    .cancel {
+        @include whiteButton;
+        top: 510px;
+        position: absolute;
+    }
+}
+
+.page4 {
+    @include layout;
+
+    h2 {
+        color: #50C9CE;
+        margin-top: -10px;
+    }
+
+    input {
+        width: 320px;
+        height: 45px;
+        padding: 4px 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: white;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    p {
+        text-align: left;
+    }
+
+    span {
+        margin-top: 15px;
+    }
+
+    .subButton {
+        padding: 9px 17px;
+        width: 104px;
+        height: 38px;
+        border: none;
+        border-radius: 6px;
+        background-color: white;
+        color: black;
+    }
+
+    .btnGrp {
+        position: absolute;
+        top: 390px;
+    }
+
+    .equal {
+        padding: 9px 17px;
+        width: 104px;
+        height: 38px;
+        border: none;
+        border-radius: 6px;
+        background-color: #9C95DC;
+        color: white;
+    }
+
+    .summary {
+        @include purpleButton;
+        top: 450px;
+        position: absolute;
+    }
+
+    .back {
+        @include whiteButton();
+        top: 510px;
+        position: absolute;
+    }
+}
