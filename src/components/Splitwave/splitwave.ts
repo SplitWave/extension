@@ -8,17 +8,17 @@ export const IDL: splitWaveIdl = {
       name: "createSplitwave",
       accounts: [
         {
-          name: "associatedTokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
-        {
           name: "authority",
           isMut: true,
           isSigner: true,
         },
         {
           name: "mint",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "recipient",
           isMut: false,
           isSigner: false,
         },
@@ -30,12 +30,7 @@ export const IDL: splitWaveIdl = {
         {
           name: "splitwaveTokenAccount",
           isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "recipient",
-          isMut: false,
-          isSigner: false,
+          isSigner: true,
         },
         {
           name: "rent",
@@ -49,6 +44,11 @@ export const IDL: splitWaveIdl = {
         },
         {
           name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "associatedTokenProgram",
           isMut: false,
           isSigner: false,
         },
@@ -69,21 +69,11 @@ export const IDL: splitWaveIdl = {
       ],
     },
     {
-      name: "disburseSplitwave",
+      name: "paySplitwave",
       accounts: [
-        {
-          name: "associatedTokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
         {
           name: "authority",
           isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "splitwaveTokenAccount",
-          isMut: true,
           isSigner: false,
         },
         {
@@ -92,9 +82,9 @@ export const IDL: splitWaveIdl = {
           isSigner: false,
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          name: "recipient",
+          isMut: false,
+          isSigner: false,
         },
         {
           name: "splitwave",
@@ -102,17 +92,17 @@ export const IDL: splitWaveIdl = {
           isSigner: false,
         },
         {
-          name: "thread",
-          isMut: false,
-          isSigner: true,
-        },
-        {
-          name: "recipient",
-          isMut: false,
+          name: "splitwaveTokenAccount",
+          isMut: true,
           isSigner: false,
         },
         {
-          name: "recipientTokenAccount",
+          name: "participant",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "participantTokenAccount",
           isMut: true,
           isSigner: false,
         },
@@ -131,11 +121,79 @@ export const IDL: splitWaveIdl = {
           isMut: false,
           isSigner: false,
         },
+        {
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "split",
+          type: "u64",
+        },
+      ],
+    },
+    {
+      name: "disburseSplitwave",
+      accounts: [
+        {
+          name: "authority",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "mint",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "recipient",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "splitwave",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "splitwaveTokenAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "payer",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "recipientTokenAccount",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "rent",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
       ],
       args: [],
-      returns: {
-        defined: "clockwork_sdk::state::ThreadResponse",
-      },
     },
     {
       name: "updateSplitwave",
@@ -144,6 +202,16 @@ export const IDL: splitWaveIdl = {
           name: "authority",
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: "mint",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "recipient",
+          isMut: false,
+          isSigner: false,
         },
         {
           name: "splitwave",
@@ -165,72 +233,6 @@ export const IDL: splitWaveIdl = {
               defined: "PartSplit",
             },
           },
-        },
-      ],
-    },
-    {
-      name: "paySplitwave",
-      accounts: [
-        {
-          name: "associatedTokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "participant",
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: "authority",
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "participantTokenAccount",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "mint",
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "splitwave",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "splitwaveTokenAccount",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "recipient",
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "rent",
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "tokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [
-        {
-          name: "split",
-          type: "u64",
         },
       ],
     },
@@ -348,7 +350,4 @@ export const IDL: splitWaveIdl = {
       msg: "Splitwave token account is not fully paid",
     },
   ],
-  metadata: {
-    address: "BswawfVwXfa928UXU4ZB4NGfoDrGondZ4JVAGscpGMTB",
-  },
 };

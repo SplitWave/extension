@@ -1,28 +1,33 @@
-import * as anchor from "@project-serum/anchor";
-import { AnchorProvider, BN, Program } from "projectSerumAnchor0250";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import * as anchor from "projectSerumAnchor0260";
+import { AnchorProvider, BN, Program } from "projectSerumAnchor0260";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
-import * as SPLITWAVE_IDL from "./../../idl/splitwave.json";
-import * as SPLITWAVE_TYPES from "./splitwave";
-import { SEED_SPLITWAVE } from "./splitwaveConfig";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
   NATIVE_MINT,
   TOKEN_PROGRAM_ID,
-} from "solanaSPLToken036";
-import { useEffect, useState } from "react";
+} from "solanaSPLToken037";
+
+import * as SPLITWAVE_IDL from "./../../idl/splitwave.json";
+import * as SPLITWAVE_TYPES from "./splitwave";
+import { SEED_SPLITWAVE, SPLITWAVE_ADDRESS } from "./splitwaveConfig";
+
 import {
   testwallet1,
   testwallet2,
-  testwallet4,
   testwalletl3,
   testwalletm3,
 } from "./splitwaveConfig";
+
+import { sendTransactions } from "../../config/connection";
+
 const Splitwave = () => {
-  const { wallet, connected, connect } = useWallet();
+  const { connected, connect, publicKey } = useWallet();
+  const wallet = useWallet();
+
   const connection = new anchor.web3.Connection(
     anchor.web3.clusterApiUrl("devnet")
   );
@@ -33,33 +38,33 @@ const Splitwave = () => {
   ) => {
     const [splitwavePda] = await PublicKey.findProgramAddress(
       [
-        // Buffer.from(SEED_SPLITWAVE),
-        anchor.utils.bytes.utf8.encode(SEED_SPLITWAVE),
+        Buffer.from(SEED_SPLITWAVE),
+        // anchor.utils.bytes.utf8.encode(SEED_SPLITWAVE),
         authority.toBuffer(),
         mint.toBuffer(),
         recipient.toBuffer(),
       ],
-      new PublicKey(SPLITWAVE_IDL.metadata.address)
+      new PublicKey(SPLITWAVE_ADDRESS)
     );
     return splitwavePda;
   };
 
   const createSplitwave = async () => {
     let wallet_t = wallet as any;
-    const create_splitwave_ixs = [];
+    const createSplitwaveIxs = [];
     const provider = new AnchorProvider(connection, wallet_t, {});
     const splitWaveProgram = new Program<SPLITWAVE_TYPES.splitWaveIdl>(
       SPLITWAVE_IDL,
-      SPLITWAVE_IDL.metadata.address,
+      SPLITWAVE_ADDRESS,
       provider
     );
     const splitwave = await findSplitwavePda(
-      testwallet1,
+      wallet_t.publicKey,
       NATIVE_MINT,
       testwalletl3
     );
 
-    console.log("splitwave: ", splitwave);
+    console.log("splitwave: ", splitwave.toBase58());
     let participants = [
       {
         split: new BN(0.5 * LAMPORTS_PER_SOL),
@@ -78,45 +83,52 @@ const Splitwave = () => {
       },
     ];
 
-    let splitwave_token_account = await getAssociatedTokenAddress(
+    let splitwaveTokenAccount = await getAssociatedTokenAddress(
       splitwave,
       NATIVE_MINT
     );
-    console.log("splitwave_token_account: ", splitwave_token_account);
+    console.log("splitwaveTokenAccount: ", splitwaveTokenAccount.toBase58());
+    console.log("testwalletl3: ", testwalletl3.toBase58());
+    console.log(
+      "wallet_t.publicKey.toBase58(): ",
+      wallet_t.publicKey.toBase58()
+    );
+    console.log("wallet_t.publicKey: ", wallet_t.publicKey);
 
-    let create_splitwave_ix = splitWaveProgram.instruction.createSplitwave(
+    let createSplitwaveIx = splitWaveProgram.instruction.createSplitwave(
       new BN(1 * LAMPORTS_PER_SOL),
       participants,
       {
         accounts: {
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-          authority: testwallet1,
+          authority: wallet_t.publicKey,
           mint: NATIVE_MINT,
-          splitwave: splitwave,
-          splitwave_token_account: splitwave_token_account,
           recipient: testwalletl3,
+          splitwave: splitwave,
+          splitwaveTokenAccount: splitwaveTokenAccount,
           rent: anchor.web3.SYSVAR_RENT_PUBKEY,
           systemProgram: anchor.web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         },
       }
     );
-    create_splitwave_ixs.push(create_splitwave_ix);
-    const tx = await wallet_t.signTransaction({
-      feePayer: wallet_t.publicKey,
-      instructions: create_splitwave_ixs,
-    });
-    const txid = await connection.sendRawTransaction(tx.serialize());
-    console.log("txid: ", txid);
+    createSplitwaveIxs.push(createSplitwaveIx);
+    const createSplitwaveSignature = await sendTransactions(
+      connection,
+      wallet,
+      [createSplitwaveIxs],
+      [[]]
+    );
+    console.log("createSplitwaveSignature: ", createSplitwaveSignature);
   };
 
   const paySplitwave = async () => {
     let wallet_t = wallet as any;
-    const pay_splitwave_ixs = [];
+    const paySplitwaveIxs = [];
     const provider = new AnchorProvider(connection, wallet_t, {});
     const splitWaveProgram = new Program<SPLITWAVE_TYPES.splitWaveIdl>(
       SPLITWAVE_IDL,
-      SPLITWAVE_IDL.metadata.address,
+      SPLITWAVE_ADDRESS,
       provider
     );
     const splitwave = await findSplitwavePda(
@@ -126,50 +138,51 @@ const Splitwave = () => {
     );
     console.log("splitwave: ", splitwave);
 
-    let participant_token_account = await getAssociatedTokenAddress(
-      testwallet1,
+    let participantTokenAccount = await getAssociatedTokenAddress(
+      wallet_t.publicKey,
       NATIVE_MINT
     );
-    console.log("participant_token_account: ", participant_token_account);
-    let splitwave_token_account = await getAssociatedTokenAddress(
+    console.log("participantTokenAccount: ", participantTokenAccount);
+    let splitwaveTokenAccount = await getAssociatedTokenAddress(
       splitwave,
       NATIVE_MINT
     );
 
-    let pay_splitwave_ix = splitWaveProgram.instruction.paySplitwave(
+    let paySplitwaveIx = splitWaveProgram.instruction.paySplitwave(
       new BN(0.5 * LAMPORTS_PER_SOL),
       {
         accounts: {
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-          participant: testwallet1,
           authority: testwallet1,
-          participant_token_account: participant_token_account,
           mint: NATIVE_MINT,
-          splitwave: splitwave,
-          splitwave_token_account: splitwave_token_account,
           recipient: testwalletl3,
+          splitwave: splitwave,
+          splitwaveTokenAccount: splitwaveTokenAccount,
+          participant: wallet_t.publicKey,
+          participantTokenAccount: participantTokenAccount,
           rent: anchor.web3.SYSVAR_RENT_PUBKEY,
           systemProgram: anchor.web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
         },
       }
     );
-    pay_splitwave_ixs.push(pay_splitwave_ix);
-    const tx = await wallet_t.signTransaction({
-      feePayer: wallet_t.publicKey,
-      instructions: pay_splitwave_ixs,
-    });
-    const txid = await connection.sendRawTransaction(tx.serialize());
-    console.log("txid: ", txid);
+    paySplitwaveIxs.push(paySplitwaveIx);
+    const paySplitwaveSignature = await sendTransactions(
+      connection,
+      wallet,
+      [paySplitwaveIxs],
+      [[]]
+    );
+    console.log("paySplitwaveSignature: ", paySplitwaveSignature);
   };
 
   const disburseSplitwave = async () => {
     let wallet_t = wallet as any;
-    const disburse_splitwave_ixs = [];
+    const disburseSplitwaveIxs = [];
     const provider = new AnchorProvider(connection, wallet_t, {});
     const splitWaveProgram = new Program<SPLITWAVE_TYPES.splitWaveIdl>(
       SPLITWAVE_IDL,
-      SPLITWAVE_IDL.metadata.address,
+      SPLITWAVE_ADDRESS,
       provider
     );
     const splitwave = await findSplitwavePda(
@@ -178,44 +191,49 @@ const Splitwave = () => {
       testwalletl3
     );
     console.log("splitwave: ", splitwave);
-    let splitwave_token_account = await getAssociatedTokenAddress(
+    let splitwaveTokenAccount = await getAssociatedTokenAddress(
       splitwave,
       NATIVE_MINT
     );
-    console.log("splitwave_token_account: ", splitwave_token_account);
-    let recipient_token_account = await getAssociatedTokenAddress(
+    console.log("splitwaveTokenAccount: ", splitwaveTokenAccount);
+    let recipientTokenAccount = await getAssociatedTokenAddress(
       testwalletl3,
       NATIVE_MINT
     );
-    console.log("recipient_token_account: ", recipient_token_account);
+    console.log("recipientTokenAccount: ", recipientTokenAccount);
 
-    let disburse_splitwave_ix = splitWaveProgram.instruction.disburseSplitwave({
+    let disburseSplitwaveIx = splitWaveProgram.instruction.disburseSplitwave({
       accounts: {
         authority: testwallet1,
         mint: NATIVE_MINT,
-        splitwave: splitwave,
-        splitwave_token_account: splitwave_token_account,
         recipient: testwalletl3,
-        recipient_token_account: recipient_token_account,
+        splitwave: splitwave,
+        splitwaveTokenAccount: splitwaveTokenAccount,
+        payer: wallet_t.publicKey,
+        recipientTokenAccount: recipientTokenAccount,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
         systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       },
     });
-    disburse_splitwave_ixs.push(disburse_splitwave_ix);
-    const tx = await wallet_t.signTransaction({
-      feePayer: wallet_t.publicKey,
-      instructions: disburse_splitwave_ixs,
-    });
-    const txid = await connection.sendRawTransaction(tx.serialize());
-    console.log("txid: ", txid);
+    disburseSplitwaveIxs.push(disburseSplitwaveIx);
+    const disburseSplitwaveSignature = await sendTransactions(
+      connection,
+      wallet,
+      [disburseSplitwaveIxs],
+      [[]]
+    );
+    console.log("disburseSplitwaveSignature: ", disburseSplitwaveSignature);
   };
 
   const updateSplitwave = async () => {
     let wallet_t = wallet as any;
-    const update_splitwave_ixs = [];
+    const updateSplitwaveIxs = [];
     const provider = new AnchorProvider(connection, wallet_t, {});
     const splitWaveProgram = new Program<SPLITWAVE_TYPES.splitWaveIdl>(
       SPLITWAVE_IDL,
-      SPLITWAVE_IDL.metadata.address,
+      SPLITWAVE_ADDRESS,
       provider
     );
     const splitwave = await findSplitwavePda(
@@ -241,44 +259,74 @@ const Splitwave = () => {
         participant: testwalletm3,
       },
     ];
-    let splitwave_token_account = await getAssociatedTokenAddress(
+    let splitwaveTokenAccount = await getAssociatedTokenAddress(
       splitwave,
       NATIVE_MINT
     );
-    console.log("splitwave_token_account: ", splitwave_token_account);
-    let recipient_token_account = await getAssociatedTokenAddress(
+    console.log("splitwaveTokenAccount: ", splitwaveTokenAccount);
+    let recipientTokenAccount = await getAssociatedTokenAddress(
       testwalletl3,
       NATIVE_MINT
     );
-    console.log("recipient_token_account: ", recipient_token_account);
+    console.log("recipientTokenAccount: ", recipientTokenAccount);
 
-    let update_splitwave_ix = splitWaveProgram.instruction.updateSplitwave(
+    let updateSplitwaveIx = splitWaveProgram.instruction.updateSplitwave(
       new BN(2 * LAMPORTS_PER_SOL),
       participants,
       {
         accounts: {
           authority: testwallet1,
           mint: NATIVE_MINT,
-          splitwave: splitwave,
-          splitwave_token_account: splitwave_token_account,
           recipient: testwalletl3,
-          recipient_token_account: recipient_token_account,
-          systemProgram: anchor.web3.SystemProgram.programId,
+          splitwave: splitwave,
         },
       }
     );
-    update_splitwave_ixs.push(update_splitwave_ix);
-    const tx = await wallet_t.signTransaction({
-      feePayer: wallet_t.publicKey,
-      instructions: update_splitwave_ixs,
-    });
-    const txid = await connection.sendRawTransaction(tx.serialize());
-    console.log("txid: ", txid);
+    updateSplitwaveIxs.push(updateSplitwaveIx);
+    const updateSplitwaveSignature = await sendTransactions(
+      connection,
+      wallet,
+      [updateSplitwaveIxs],
+      [[]]
+    );
+    console.log("updateSplitwaveSignature: ", updateSplitwaveSignature);
   };
 
   return (
     <div>
-      <h1>Splitwave</h1>
+      {wallet && !wallet.connected && (
+        <button className="connect-wallet-button" onClick={() => connect()}>
+          Connect Wallet
+        </button>
+      )}
+      {publicKey && (
+        // {wallet && wallet.connected && (
+        <>
+          <div className="raffle-header">
+            <button
+              className="createSplitwave"
+              onClick={() => createSplitwave()}
+            >
+              Create Splitwave
+            </button>
+            <button className="paySplitwave" onClick={() => paySplitwave()}>
+              Pay Splitwave
+            </button>
+            <button
+              className="disburseSplitwave"
+              onClick={() => disburseSplitwave()}
+            >
+              Disburse Splitwave
+            </button>
+            <button
+              className="updateSplitwave"
+              onClick={() => updateSplitwave()}
+            >
+              Update Splitwave
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
