@@ -3,8 +3,58 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { appRouter } from './App';
-import { RouterProvider } from 'react-router-dom';
+// import { appRouter } from './App';
+import { RouterProvider, Outlet, createBrowserRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+// * all the pages
+// import Home from './pages';
+import Navbar from './components/Navbar';
+import Error from './pages/Error';
+import PendingWave from './pages/PendingWave';
+import SelectAmount from './pages/SelectAmount';
+import AmountToPay from './pages/AmountToPay';
+import Page5 from './pages/page5';
+
+const AppLayout = () => {
+    return (
+    <>
+        <Navbar />
+        <Outlet/>
+    </>
+    )
+  }
+  
+  export const appRouter = createBrowserRouter([
+      {
+          path: "/",
+          element: <AppLayout />,
+          errorElement: <Error />, 
+          children: [
+              {
+                  path: "/",
+                  element: <App />,   
+              },
+              {
+                path: "/pending", 
+                element: <PendingWave />
+              },
+              {
+                path: "/selectamount", 
+                element: <SelectAmount />
+              },
+              {
+                path: "/payamount", 
+                element: <AmountToPay />
+              },
+              {
+                path: "/page5", 
+                element: <Page5 />
+              },
+          ]  
+      },
+  
+  ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

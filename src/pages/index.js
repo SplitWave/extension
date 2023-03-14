@@ -1,19 +1,20 @@
 // import Link from 'next/link'
 import styles from '../styles/Home.module.scss'
-
-
+// import { WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
+import Connect2Phantom from '../components/Connect2Phantom.tsx';
 export default function Home() {
+    
 
-    const connectWallet = async () => {
-        if (window?.solana?.isPhantom) {
-            console.log('Phantom wallet found!');
-            const response = await window.solana.connect()
-            console.log('Connected with Public Key: ', response.publicKey.toString())
-            // setWalletAddress(response.publicKey.toString())
-        } else {
-            alert('Solana object not found! Get a Phantom Wallet')
-        }
-    }
+    // const connectWallet = async () => {
+    //     if (window?.solana?.isPhantom) {
+    //         console.log('Phantom wallet found!');
+    //         const response = await window.solana.connect()
+    //         console.log('Connected with Public Key: ', response.publicKey.toString())
+    //         // setWalletAddress(response.publicKey.toString())
+    //     } else {
+    //         alert('Solana object not found! Get a Phantom Wallet')
+    //     }
+    // }
 
     return (
         <div className={styles.homepage}>
@@ -31,7 +32,10 @@ export default function Home() {
             <button className={styles.login}>Log in</button>
             <p>OR</p>
             <button className={styles.gum}>Register with Gum</button>
-            <button className={styles.phantom} onClick={connectWallet}>Connect Phantom <span className={styles.icon}></span></button>
+            {/* <button className={styles.phantom}><Connect2Phantom /> <span className={styles.icon}></span></button> */}
+            <Connect2Phantom />
+            {/* <button className={styles.homepage}>Go to Homepage</button> */}
+            
         </div>
     )
 }

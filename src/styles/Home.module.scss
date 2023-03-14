@@ -136,6 +136,28 @@ $blue: #5339CC;
         }
 
     }
+    .phantom2 {
+        background-color: $blue;
+        margin-top: 16px;
+        display: none;
+
+        .icon {
+            background: url(../../public/phantom.jpg);
+            width: 30px;
+        }
+
+    }
+    .homepage {
+        background-color: $pink;
+        margin-top: 16px;
+        display: none;
+
+        .icon {
+            background: url(../../public/phantom.jpg);
+            width: 30px;
+        }
+
+    }
 
 }
 
