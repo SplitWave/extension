@@ -1,16 +1,56 @@
-import { PublicKey } from "@solana/web3.js";
+import { UseStruct } from "@metaplex-foundation/mpl-token-metadata";
+import { PublicKey, Struct } from "@solana/web3.js";
+import { BN } from "@project-serum/anchor";
+import {
+  TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TokenOwnerOffCurveError,
+} from "@solana/spl-token";
 
 export const SEED_SPLITWAVE = "splitwave";
+export const SEED_SPLITWAVE_TREASURY = "splitwave-treasury";
 export const SEED_SPLITWAVE_ID = "splitwave-id";
 
-export interface PartSplit {
-  split: Number;
-  paid: Boolean;
-  participant: PublicKey;
+export type PendingSplitwaves = {
+  splitwaveId: BN,
+  splitwaveAmount: BN,
 }
 
+export type MintAddressSymbols = {
+  symbol: string;
+  mintAddress: PublicKey;
+};
+
+export type SplitParticipant = {
+  paid: boolean;
+  participantSplitAmount: BN;
+  participantTokenAccount: PublicKey;
+}
+
+export type NewParticipant = {
+  newParticipantAddress: string;
+  newParticipantShare: number;
+}
+export const getAssociatedTokenBump = async (
+  mint: PublicKey,
+  owner: PublicKey,
+  allowOwnerOffCurve = false,
+  programId = TOKEN_PROGRAM_ID,
+  associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID
+) => {
+  if (!allowOwnerOffCurve && !PublicKey.isOnCurve(owner.toBuffer()))
+    throw new TokenOwnerOffCurveError();
+
+  const [address, bump] = await PublicKey.findProgramAddress(
+    [owner.toBuffer(), programId.toBuffer(), mint.toBuffer()],
+    associatedTokenProgramId
+  );
+
+  return bump;
+};
+
 export const SPLITWAVE_PROGRAM_ID = new PublicKey(
-  "SpWwab5CWBLYHfXfnfRqobDq7122etY6V35ed6ZTw9J"
+  "pp1aQnBZ8271r5LcZymbudhTXbExDQiH2CzDj3N6ujY"
 );
 
 export const ZzZ1PK = "DHywTRDpPWiyxXfgdaaPPXeBsvU6Lmofkk8SAU7kZzZ1";

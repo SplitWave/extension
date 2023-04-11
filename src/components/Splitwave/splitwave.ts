@@ -29,12 +29,11 @@ export type Splitwave = {
         {
           "name": "authority",
           "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
+          "isSigner": true,
+          "docs": [
+            "Key paying SOL fees for setting up the Splitwave instance.",
+            "Authority key for the Splitwave instance."
+          ]
         },
         {
           "name": "recipient",
@@ -42,14 +41,46 @@ export type Splitwave = {
           "isSigner": false
         },
         {
+          "name": "recipientTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "SOL or SPL token account to receive the final amount.",
+            "If treasury mint is native this will be the same as the `recipient`."
+          ]
+        },
+        {
           "name": "splitwave",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "splitwave instance"
+          ]
+        },
+        {
+          "name": "splitwaveTreasury",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Splitwave instance's treasury account"
+          ]
+        },
+        {
+          "name": "splitwaveMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "splitwave_mint Mint account, either native SOL mint or a SPL token mint."
+          ]
         },
         {
           "name": "splitwaveId",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "splitwave_id instance",
+            "constant address but the splitwave_id increments sequentially"
+          ]
         },
         {
           "name": "rent",
@@ -81,9 +112,13 @@ export type Splitwave = {
           "name": "participants",
           "type": {
             "vec": {
-              "defined": "PartSplit"
+              "defined": "SplitParticipant"
             }
           }
+        },
+        {
+          "name": "splitwaveTreasuryBump",
+          "type": "u8"
         }
       ]
     },
@@ -96,44 +131,55 @@ export type Splitwave = {
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "recipientTokenAccount",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "SOL or SPL token account to receive the final amount.",
+            "If treasury mint is native this will be the same as the `recipient` passed in create_splitwave ix."
+          ]
         },
         {
           "name": "splitwave",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "splitwave instance"
+          ]
         },
         {
-          "name": "splitwaveTokenAccount",
+          "name": "splitwaveTreasury",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Splitwave instance's treasury account"
+          ]
+        },
+        {
+          "name": "splitwaveMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "splitwave_mint Mint account, either native SOL mint or a SPL token mint."
+          ]
         },
         {
           "name": "participant",
           "isMut": true,
-          "isSigner": true
+          "isSigner": true,
+          "docs": [
+            "participant as signer"
+          ]
         },
         {
           "name": "participantTokenAccount",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "SOL or SPL token account to receive the final amount.",
+            "If treasury mint is native this will be the same as the `participant`",
+            "passed in create_splitwave ix as arguments."
+          ]
         },
         {
           "name": "systemProgram",
@@ -142,100 +188,24 @@ export type Splitwave = {
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "split",
+          "name": "participantSplitAmount",
           "type": "u64"
         }
       ]
-    },
-    {
-      "name": "disburseSplitwave",
-      "accounts": [
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "splitwave",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "splitwaveTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "recipientTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
     },
     {
       "name": "updateSplitwave",
       "accounts": [
         {
           "name": "authority",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
         },
         {
           "name": "splitwave",
@@ -254,7 +224,7 @@ export type Splitwave = {
           "name": "participants",
           "type": {
             "vec": {
-              "defined": "PartSplit"
+              "defined": "SplitParticipant"
             }
           }
         }
@@ -294,6 +264,10 @@ export type Splitwave = {
             "type": "u8"
           },
           {
+            "name": "splitwaveDisbursed",
+            "type": "bool"
+          },
+          {
             "name": "splitwaveId",
             "type": "u64"
           },
@@ -302,7 +276,7 @@ export type Splitwave = {
             "type": "u64"
           },
           {
-            "name": "amountPaidToSplitwave",
+            "name": "amountPaidToSplitwaveAccount",
             "type": "u64"
           },
           {
@@ -318,26 +292,26 @@ export type Splitwave = {
             "type": "publicKey"
           },
           {
-            "name": "mint",
+            "name": "recipientTokenAccount",
             "type": "publicKey"
           },
           {
-            "name": "recipient",
+            "name": "splitwaveMint",
             "type": "publicKey"
           },
           {
-            "name": "amountDisbursedToRecipient",
-            "type": "bool"
+            "name": "splitwaveTreasury",
+            "type": "publicKey"
           },
           {
-            "name": "splitwaveTokenAccount",
-            "type": "publicKey"
+            "name": "splitwaveTreasuryBump",
+            "type": "u8"
           },
           {
             "name": "participants",
             "type": {
               "vec": {
-                "defined": "PartSplit"
+                "defined": "SplitParticipant"
               }
             }
           }
@@ -347,7 +321,7 @@ export type Splitwave = {
   ],
   "types": [
     {
-      "name": "PartSplit",
+      "name": "SplitParticipant",
       "docs": [
         "A structure representing a participant's split and payment status."
       ],
@@ -355,15 +329,15 @@ export type Splitwave = {
         "kind": "struct",
         "fields": [
           {
-            "name": "split",
-            "type": "u64"
-          },
-          {
             "name": "paid",
             "type": "bool"
           },
           {
-            "name": "participant",
+            "name": "participantSplitAmount",
+            "type": "u64"
+          },
+          {
+            "name": "participantTokenAccount",
             "type": "publicKey"
           }
         ]
@@ -405,6 +379,171 @@ export type Splitwave = {
       "code": 6006,
       "name": "DeserializationError",
       "msg": "Deserialization error"
+    },
+    {
+      "code": 6007,
+      "name": "AssociatedTokenAccountMismatch",
+      "msg": "Associated token account mismatch"
+    },
+    {
+      "code": 6008,
+      "name": "AuthorityNotParticipant",
+      "msg": "Authority is not a participant"
+    },
+    {
+      "code": 6009,
+      "name": "MintNotProvided",
+      "msg": "Mint not provided"
+    },
+    {
+      "code": 6010,
+      "name": "SplitwaveTokenAccountNotProvided",
+      "msg": "Splitwave token account not provided"
+    },
+    {
+      "code": 6011,
+      "name": "ParticipantTokenAccountNotProvided",
+      "msg": "Participant token account not provided"
+    },
+    {
+      "code": 6012,
+      "name": "RecipientTokenAccountNotProvided",
+      "msg": "Recipient token account not provided"
+    },
+    {
+      "code": 6013,
+      "name": "SplitwaveTokenAccountMintMismatch",
+      "msg": "Splitwave token account mint mismatch"
+    },
+    {
+      "code": 6014,
+      "name": "ParticipantTokenAccountMintMismatch",
+      "msg": "Participant token account mint mismatch"
+    },
+    {
+      "code": 6015,
+      "name": "RecipientTokenAccountMintMismatch",
+      "msg": "Recipient token account mint mismatch"
+    },
+    {
+      "code": 6016,
+      "name": "SplitwaveTokenAccountOwnerMismatch",
+      "msg": "Splitwave token account owner mismatch"
+    },
+    {
+      "code": 6017,
+      "name": "ParticipantTokenAccountOwnerMismatch",
+      "msg": "Participant token account owner mismatch"
+    },
+    {
+      "code": 6018,
+      "name": "RecipientTokenAccountOwnerMismatch",
+      "msg": "Recipient token account owner mismatch"
+    },
+    {
+      "code": 6019,
+      "name": "ParticipantTokenAccountInsufficientBalance",
+      "msg": "Participant token account insufficient balance"
+    },
+    {
+      "code": 6020,
+      "name": "ParticipantLamportInsufficientBalance",
+      "msg": "Participant lamport insufficient balance"
+    },
+    {
+      "code": 6021,
+      "name": "MintMismatch",
+      "msg": "Mint mismatch"
+    },
+    {
+      "code": 6022,
+      "name": "SplitwaveTokenAccountMismatch",
+      "msg": "Splitwave token account mismatch"
+    },
+    {
+      "code": 6023,
+      "name": "InvalidMintInitialized",
+      "msg": "Invalid Mint Initialized"
+    },
+    {
+      "code": 6024,
+      "name": "InvalidMintSupply",
+      "msg": "Invalid Mint Supply"
+    },
+    {
+      "code": 6025,
+      "name": "InvalidMint",
+      "msg": "Invalid Mint"
+    },
+    {
+      "code": 6026,
+      "name": "AmountAlreadyDisbursedToRecipient",
+      "msg": "Amount Already Disbursed to Recipient"
+    },
+    {
+      "code": 6027,
+      "name": "DuplicateParticipants",
+      "msg": "Duplicate Participants"
+    },
+    {
+      "code": 6028,
+      "name": "InvalidAccounts",
+      "msg": "Invalid Accounts"
+    },
+    {
+      "code": 6029,
+      "name": "ParticipantNotFound",
+      "msg": "Participant not found"
+    },
+    {
+      "code": 6030,
+      "name": "ParticipantAlreadyPaid",
+      "msg": "Participant already paid"
+    },
+    {
+      "code": 6031,
+      "name": "ParticipantPaidIncorrectAmount",
+      "msg": "Participant paid incorrect amount"
+    },
+    {
+      "code": 6032,
+      "name": "InvalidTokenAccountOwner",
+      "msg": "Invalid Token Account Owner"
+    },
+    {
+      "code": 6033,
+      "name": "TokenTransferFailed",
+      "msg": "Token transfer failed"
+    },
+    {
+      "code": 6034,
+      "name": "PublicKeyMismatch",
+      "msg": "Public key mismatch"
+    },
+    {
+      "code": 6035,
+      "name": "UninitializedAccount",
+      "msg": "Uninitialized account"
+    },
+    {
+      "code": 6036,
+      "name": "IncorrectOwner",
+      "msg": "Invalid account owner"
+    },
+    {
+      "code": 6037,
+      "name": "DerivedKeyInvalid",
+      "msg": "Derived Key is not a signer"
+    },
+    {
+      "code": 6038,
+      "name": "BumpSeedNotInHashMap",
+      "msg": "Invalid bump seed"
+    },
+    {
+      "code": 6039,
+      "name": "InvalidAssociatedTokenAccount",
+      "msg": "Invalid Associated Token Account"
     }
   ]
 };
@@ -440,12 +579,11 @@ export const IDL: Splitwave = {
         {
           "name": "authority",
           "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
+          "isSigner": true,
+          "docs": [
+            "Key paying SOL fees for setting up the Splitwave instance.",
+            "Authority key for the Splitwave instance."
+          ]
         },
         {
           "name": "recipient",
@@ -453,14 +591,46 @@ export const IDL: Splitwave = {
           "isSigner": false
         },
         {
+          "name": "recipientTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "SOL or SPL token account to receive the final amount.",
+            "If treasury mint is native this will be the same as the `recipient`."
+          ]
+        },
+        {
           "name": "splitwave",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "splitwave instance"
+          ]
+        },
+        {
+          "name": "splitwaveTreasury",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Splitwave instance's treasury account"
+          ]
+        },
+        {
+          "name": "splitwaveMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "splitwave_mint Mint account, either native SOL mint or a SPL token mint."
+          ]
         },
         {
           "name": "splitwaveId",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "splitwave_id instance",
+            "constant address but the splitwave_id increments sequentially"
+          ]
         },
         {
           "name": "rent",
@@ -492,9 +662,13 @@ export const IDL: Splitwave = {
           "name": "participants",
           "type": {
             "vec": {
-              "defined": "PartSplit"
+              "defined": "SplitParticipant"
             }
           }
+        },
+        {
+          "name": "splitwaveTreasuryBump",
+          "type": "u8"
         }
       ]
     },
@@ -507,44 +681,55 @@ export const IDL: Splitwave = {
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "recipientTokenAccount",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "SOL or SPL token account to receive the final amount.",
+            "If treasury mint is native this will be the same as the `recipient` passed in create_splitwave ix."
+          ]
         },
         {
           "name": "splitwave",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "splitwave instance"
+          ]
         },
         {
-          "name": "splitwaveTokenAccount",
+          "name": "splitwaveTreasury",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "Splitwave instance's treasury account"
+          ]
+        },
+        {
+          "name": "splitwaveMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "splitwave_mint Mint account, either native SOL mint or a SPL token mint."
+          ]
         },
         {
           "name": "participant",
           "isMut": true,
-          "isSigner": true
+          "isSigner": true,
+          "docs": [
+            "participant as signer"
+          ]
         },
         {
           "name": "participantTokenAccount",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "SOL or SPL token account to receive the final amount.",
+            "If treasury mint is native this will be the same as the `participant`",
+            "passed in create_splitwave ix as arguments."
+          ]
         },
         {
           "name": "systemProgram",
@@ -553,100 +738,24 @@ export const IDL: Splitwave = {
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "split",
+          "name": "participantSplitAmount",
           "type": "u64"
         }
       ]
-    },
-    {
-      "name": "disburseSplitwave",
-      "accounts": [
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "splitwave",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "splitwaveTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "payer",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "recipientTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
     },
     {
       "name": "updateSplitwave",
       "accounts": [
         {
           "name": "authority",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recipient",
-          "isMut": false,
-          "isSigner": false
         },
         {
           "name": "splitwave",
@@ -665,7 +774,7 @@ export const IDL: Splitwave = {
           "name": "participants",
           "type": {
             "vec": {
-              "defined": "PartSplit"
+              "defined": "SplitParticipant"
             }
           }
         }
@@ -705,6 +814,10 @@ export const IDL: Splitwave = {
             "type": "u8"
           },
           {
+            "name": "splitwaveDisbursed",
+            "type": "bool"
+          },
+          {
             "name": "splitwaveId",
             "type": "u64"
           },
@@ -713,7 +826,7 @@ export const IDL: Splitwave = {
             "type": "u64"
           },
           {
-            "name": "amountPaidToSplitwave",
+            "name": "amountPaidToSplitwaveAccount",
             "type": "u64"
           },
           {
@@ -729,26 +842,26 @@ export const IDL: Splitwave = {
             "type": "publicKey"
           },
           {
-            "name": "mint",
+            "name": "recipientTokenAccount",
             "type": "publicKey"
           },
           {
-            "name": "recipient",
+            "name": "splitwaveMint",
             "type": "publicKey"
           },
           {
-            "name": "amountDisbursedToRecipient",
-            "type": "bool"
+            "name": "splitwaveTreasury",
+            "type": "publicKey"
           },
           {
-            "name": "splitwaveTokenAccount",
-            "type": "publicKey"
+            "name": "splitwaveTreasuryBump",
+            "type": "u8"
           },
           {
             "name": "participants",
             "type": {
               "vec": {
-                "defined": "PartSplit"
+                "defined": "SplitParticipant"
               }
             }
           }
@@ -758,7 +871,7 @@ export const IDL: Splitwave = {
   ],
   "types": [
     {
-      "name": "PartSplit",
+      "name": "SplitParticipant",
       "docs": [
         "A structure representing a participant's split and payment status."
       ],
@@ -766,15 +879,15 @@ export const IDL: Splitwave = {
         "kind": "struct",
         "fields": [
           {
-            "name": "split",
-            "type": "u64"
-          },
-          {
             "name": "paid",
             "type": "bool"
           },
           {
-            "name": "participant",
+            "name": "participantSplitAmount",
+            "type": "u64"
+          },
+          {
+            "name": "participantTokenAccount",
             "type": "publicKey"
           }
         ]
@@ -816,6 +929,171 @@ export const IDL: Splitwave = {
       "code": 6006,
       "name": "DeserializationError",
       "msg": "Deserialization error"
+    },
+    {
+      "code": 6007,
+      "name": "AssociatedTokenAccountMismatch",
+      "msg": "Associated token account mismatch"
+    },
+    {
+      "code": 6008,
+      "name": "AuthorityNotParticipant",
+      "msg": "Authority is not a participant"
+    },
+    {
+      "code": 6009,
+      "name": "MintNotProvided",
+      "msg": "Mint not provided"
+    },
+    {
+      "code": 6010,
+      "name": "SplitwaveTokenAccountNotProvided",
+      "msg": "Splitwave token account not provided"
+    },
+    {
+      "code": 6011,
+      "name": "ParticipantTokenAccountNotProvided",
+      "msg": "Participant token account not provided"
+    },
+    {
+      "code": 6012,
+      "name": "RecipientTokenAccountNotProvided",
+      "msg": "Recipient token account not provided"
+    },
+    {
+      "code": 6013,
+      "name": "SplitwaveTokenAccountMintMismatch",
+      "msg": "Splitwave token account mint mismatch"
+    },
+    {
+      "code": 6014,
+      "name": "ParticipantTokenAccountMintMismatch",
+      "msg": "Participant token account mint mismatch"
+    },
+    {
+      "code": 6015,
+      "name": "RecipientTokenAccountMintMismatch",
+      "msg": "Recipient token account mint mismatch"
+    },
+    {
+      "code": 6016,
+      "name": "SplitwaveTokenAccountOwnerMismatch",
+      "msg": "Splitwave token account owner mismatch"
+    },
+    {
+      "code": 6017,
+      "name": "ParticipantTokenAccountOwnerMismatch",
+      "msg": "Participant token account owner mismatch"
+    },
+    {
+      "code": 6018,
+      "name": "RecipientTokenAccountOwnerMismatch",
+      "msg": "Recipient token account owner mismatch"
+    },
+    {
+      "code": 6019,
+      "name": "ParticipantTokenAccountInsufficientBalance",
+      "msg": "Participant token account insufficient balance"
+    },
+    {
+      "code": 6020,
+      "name": "ParticipantLamportInsufficientBalance",
+      "msg": "Participant lamport insufficient balance"
+    },
+    {
+      "code": 6021,
+      "name": "MintMismatch",
+      "msg": "Mint mismatch"
+    },
+    {
+      "code": 6022,
+      "name": "SplitwaveTokenAccountMismatch",
+      "msg": "Splitwave token account mismatch"
+    },
+    {
+      "code": 6023,
+      "name": "InvalidMintInitialized",
+      "msg": "Invalid Mint Initialized"
+    },
+    {
+      "code": 6024,
+      "name": "InvalidMintSupply",
+      "msg": "Invalid Mint Supply"
+    },
+    {
+      "code": 6025,
+      "name": "InvalidMint",
+      "msg": "Invalid Mint"
+    },
+    {
+      "code": 6026,
+      "name": "AmountAlreadyDisbursedToRecipient",
+      "msg": "Amount Already Disbursed to Recipient"
+    },
+    {
+      "code": 6027,
+      "name": "DuplicateParticipants",
+      "msg": "Duplicate Participants"
+    },
+    {
+      "code": 6028,
+      "name": "InvalidAccounts",
+      "msg": "Invalid Accounts"
+    },
+    {
+      "code": 6029,
+      "name": "ParticipantNotFound",
+      "msg": "Participant not found"
+    },
+    {
+      "code": 6030,
+      "name": "ParticipantAlreadyPaid",
+      "msg": "Participant already paid"
+    },
+    {
+      "code": 6031,
+      "name": "ParticipantPaidIncorrectAmount",
+      "msg": "Participant paid incorrect amount"
+    },
+    {
+      "code": 6032,
+      "name": "InvalidTokenAccountOwner",
+      "msg": "Invalid Token Account Owner"
+    },
+    {
+      "code": 6033,
+      "name": "TokenTransferFailed",
+      "msg": "Token transfer failed"
+    },
+    {
+      "code": 6034,
+      "name": "PublicKeyMismatch",
+      "msg": "Public key mismatch"
+    },
+    {
+      "code": 6035,
+      "name": "UninitializedAccount",
+      "msg": "Uninitialized account"
+    },
+    {
+      "code": 6036,
+      "name": "IncorrectOwner",
+      "msg": "Invalid account owner"
+    },
+    {
+      "code": 6037,
+      "name": "DerivedKeyInvalid",
+      "msg": "Derived Key is not a signer"
+    },
+    {
+      "code": 6038,
+      "name": "BumpSeedNotInHashMap",
+      "msg": "Invalid bump seed"
+    },
+    {
+      "code": 6039,
+      "name": "InvalidAssociatedTokenAccount",
+      "msg": "Invalid Associated Token Account"
     }
   ]
 };
